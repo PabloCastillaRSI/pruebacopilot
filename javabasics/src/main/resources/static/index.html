@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Car Brands</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        main {
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        li:hover {
+            background-color: #e0e0e0;
+        }
+        .comparison {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function getModel(brand) {
+            fetch(`/modelo/${brand}`)
+                .then(response => response.json())
+                .then(model => {
+                    alert(`Brand: ${model.brand}\nModel: ${model.model}\nYear: ${model.year}\nEngine Type: ${model.engineType}\nPrice: $${model.price}`);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function compareModels() {
+            const brand1 = document.getElementById('brand1').value;
+            const brand2 = document.getElementById('brand2').value;
+
+            fetch(`/comparar/${brand1}/${brand2}`)
+                .then(response => response.json())
+                .then(comparison => {
+                    const ctx = document.getElementById('comparisonChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [comparison.car1.brand, comparison.car2.brand],
+                            datasets: [{
+                                label: 'Price',
+                                data: [comparison.car1.price, comparison.car2.price],
+                                backgroundColor: ['#4CAF50', '#FF5733']
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Car Brands</h1>
+    </header>
+    <main>
+        <ul>
+            <li onclick="getModel('Audi')">Audi</li>
+            <li onclick="getModel('BMW')">BMW</li>
+            <li onclick="getModel('Mercedes')">Mercedes</li>
+            <li onclick="getModel('Volkswagen')">Volkswagen</li>
+            <li onclick="getModel('Renault')">Renault</li>
+            <li onclick="getModel('Peugeot')">Peugeot</li>
+            <li onclick="getModel('Citroen')">Citroen</li>
+            <li onclick="getModel('Fiat')">Fiat</li>
+            <li onclick="getModel('Ford')">Ford</li>
+            <li onclick="getModel('Opel')">Opel</li>
+        </ul>
+        <div class="comparison">
+            <h2>Compare Car Models</h2>
+            <label for="brand1">Select first brand:</label>
+            <select id="brand1">
+                <option value="Audi">Audi</option>
+                <option value="BMW">BMW</option>
+                <option value="Mercedes">Mercedes</option>
+                <option value="Volkswagen">Volkswagen</option>
+                <option value="Renault">Renault</option>
+                <option value="Peugeot">Peugeot</option>
+                <option value="Citroen">Citroen</option>
+                <option value="Fiat">Fiat</option>
+                <option value="Ford">Ford</option>
+                <option value="Opel">Opel</option>
+            </select>
+            <br>
+            <label for="brand2">Select second brand:</label>
+            <select id="brand2">
+                <option value="Audi">Audi</option>
+                <option value="BMW">BMW</option>
+                <option value="Mercedes">Mercedes</option>
+                <option value="Volkswagen">Volkswagen</option>
+                <option value="Renault">Renault</option>
+                <option value="Peugeot">Peugeot</option>
+                <option value="Citroen">Citroen</option>
+                <option value="Fiat">Fiat</option>
+                <option value="Ford">Ford</option>
+                <option value="Opel">Opel</option>
+            </select>
+            <br>
+            <button onclick="compareModels()">Compare</button>
+            <canvas id="comparisonChart" width="400" height="200"></canvas>
+        </div>
+    </main>
+</body>
+</html>
