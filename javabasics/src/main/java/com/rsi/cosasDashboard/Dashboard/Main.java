@@ -55,6 +55,8 @@ public class Main {
                      new Clarity("P01111","NPS", 3.00,listaIdsP05248.get(2))
            );
 
+
+
            Map<String, BigDecimal> costePorProyecto = calculaCosteImputaciones(empleados, listaImputaciones);
 
            costePorProyecto.forEach((key, value) -> System.out.println("Coste total para " + key + ": " + value));
@@ -267,5 +269,17 @@ public class Main {
 
             // Devolvemos el mapa con los costes por proyecto
             return calculos;
+       }
+
+       public Map<String, Double> getHorasImputadasProyectos(List<Clarity> listaImputaciones){
+               Map<String, Double> horasImputadasProyectos = new HashMap<>();
+               for (Clarity imputacion: listaImputaciones){
+                   if (!horasImputadasProyectos.containsKey(imputacion.getNombreProyecto())){
+                       horasImputadasProyectos.put(imputacion.getNombreProyecto(), imputacion.getHorasImputadas());
+                   }else {
+                       horasImputadasProyectos.put(imputacion.getNombreProyecto(), horasImputadasProyectos.get(imputacion.getNombreProyecto()) + imputacion.getHorasImputadas());
+                   }
+               }
+               return horasImputadasProyectos;
        }
 }
